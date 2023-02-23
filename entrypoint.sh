@@ -28,7 +28,7 @@ git_setup() {
     # When the runner maps the $GITHUB_WORKSPACE mount, it is owned by the runner
     # user while the created folders are owned by the container user, causing this
     # error. Issue description here: https://github.com/actions/checkout/issues/766
-    git config --global --add safe.directory /github/workspace
+    git config --global --add safe.directory ${GITHUB_WORKSPACE}/
 
     git config --global user.name "${INPUT_GIT_PUSH_USER_NAME}"
     git config --global user.email "${INPUT_GIT_PUSH_USER_EMAIL}"
@@ -75,21 +75,14 @@ git_commit() {
     git commit "${args[@]}"
 }
 
-update_doc() {
-    local working_dir
-    working_dir="$1"
-    echo "::debug working_dir=${working_dir}"
+update_search_root() {
+    local search_root
+    search_root="$1"
+    echo "::debug search_root=${search_root}"
 
-    helm-docs --chart-to-generate ${working_dir}
-    success=$?
+    helm-docs --chart-search-root ${search_root}/
 
-    if [ $success -ne 0 ]; then
-        exit $success
-    fi
-
-    if [  $success -eq 0 ]; then
-        git_add "${working_dir}/${OUTPUT_FILE:-README.md}"
-    fi
+    git_add "${search_root}/"
 
 }
 
@@ -98,10 +91,10 @@ cd "${GITHUB_WORKSPACE}"
 
 git_setup
 
-if  [ -n "${INPUT_WORKING_DIRS:-}" ]; then
-    #Split INPUT_WORKING_DIRS by commas
-    for project_dir in ${INPUT_WORKING_DIRS//,/ }; do
-        update_doc "${project_dir}"
+if  [ -n "${INPUT_SEARCH_ROOTS:-}" ]; then
+    #Split INPUT_SEARCH_ROOTS by commas
+    for search_root in ${INPUT_SEARCH_ROOTS//,/ }; do
+        update_search_root "${search_root}"
     done
 else
     echo "ERROR: no-op because INPUT_WORKING_DIRS not specified" >&2
