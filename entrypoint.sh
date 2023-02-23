@@ -97,7 +97,7 @@ if  [ -n "${INPUT_SEARCH_ROOTS:-}" ]; then
         update_search_root "${search_root}"
     done
 else
-    echo "ERROR: no-op because INPUT_WORKING_DIRS not specified" >&2
+    echo "ERROR: no-op because INPUT_SEARCH_ROOTS not specified" >&2
     exit 1
 fi
 

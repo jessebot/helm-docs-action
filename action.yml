@@ -3,7 +3,7 @@ author: helm-docs ,ShayB.T
 description: A Github action for generating helm documentation using helm-docs and gomplate.
 
 inputs:
-  working-dirs:
+  search-roots:
     description: Comma separated list of directories to find charts and generate docs
     required: false
     default: "."
@@ -44,7 +44,7 @@ runs:
   using: docker
   image: Dockerfile
   env:
-    INPUT_WORKING_DIRS: ${{ inputs.working-dirs }}
+    INPUT_SEARCH_ROOTS: ${{ inputs.search-roots }}
     INPUT_OUTPUT_FILE: ${{ inputs.output-file }}
     INPUT_OUTPUT_METHOD: ${{ inputs.output-method }}
     INPUT_GIT_PUSH: ${{ inputs.git-push }}
