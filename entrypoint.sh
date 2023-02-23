@@ -18,7 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 set -o errtrace
-set -o xtrace
+# set -o xtrace
 
 
 : "${INPUT_GIT_PUSH_USER_NAME:=github-actions[bot]}"
