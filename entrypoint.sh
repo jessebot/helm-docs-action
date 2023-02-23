@@ -28,13 +28,10 @@ git_setup() {
     # When the runner maps the $GITHUB_WORKSPACE mount, it is owned by the runner
     # user while the created folders are owned by the container user, causing this
     # error. Issue description here: https://github.com/actions/checkout/issues/766
-    git config --global --add safe.directory ${GITHUB_WORKSPACE}/
+    git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
     git config --global user.name "${INPUT_GIT_PUSH_USER_NAME}"
     git config --global user.email "${INPUT_GIT_PUSH_USER_EMAIL}"
-    # DEBUG
-    git status || true
-    git remote show -v || true
     GIT_REMOTE_URL=$(git config --get remote.origin.url)
     if [[ ${GIT_REMOTE_URL} =~ ^(git@) ]]; then
         # remote URL uses SSH, replace with HTTPS equivalent
