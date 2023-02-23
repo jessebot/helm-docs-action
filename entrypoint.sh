@@ -32,6 +32,9 @@ git_setup() {
 
     git config --global user.name "${INPUT_GIT_PUSH_USER_NAME}"
     git config --global user.email "${INPUT_GIT_PUSH_USER_EMAIL}"
+    # DEBUG
+    git status || true
+    git remote show -v || true
     GIT_REMOTE_URL=$(git config --get remote.origin.url)
     if [[ ${GIT_REMOTE_URL} =~ ^(git@) ]]; then
         # remote URL uses SSH, replace with HTTPS equivalent
