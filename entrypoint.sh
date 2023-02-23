@@ -15,17 +15,14 @@
 # limitations under the License.
 
 set -o errexit
+set -o nounset
 set -o pipefail
 set -o errtrace
+set -o xtrace
 
 
-if [ -z "${INPUT_GIT_PUSH_USER_NAME}" ]; then
-    INPUT_GIT_PUSH_USER_NAME="github-actions[bot]"
-fi
-
-if [ -z "${INPUT_GIT_PUSH_USER_EMAIL}" ]; then
-    INPUT_GIT_PUSH_USER_EMAIL="github-actions[bot]@users.noreply.github.com"
-fi
+: "${INPUT_GIT_PUSH_USER_NAME:=github-actions[bot]}"
+: "${INPUT_GIT_PUSH_USER_EMAIL:=github-actions[bot]@users.noreply.github.com}"
 
 git_setup() {
     # When the runner maps the $GITHUB_WORKSPACE mount, it is owned by the runner
@@ -35,6 +32,11 @@ git_setup() {
 
     git config --global user.name "${INPUT_GIT_PUSH_USER_NAME}"
     git config --global user.email "${INPUT_GIT_PUSH_USER_EMAIL}"
+    GIT_REMOTE_URL=$(git config --get remote.origin.url)
+    if [[ ${GIT_REMOTE_URL} =~ ^(git@) ]]; then
+        # remote URL uses SSH, replace with HTTPS equivalent
+        git remote set-url origin "${GIT_REMOTE_URL//git@github.com:/https:\/\/github.com\/}"
+    fi
     git fetch --depth=1 origin +refs/tags/*:refs/tags/* || true
 }
 
@@ -86,7 +88,7 @@ update_doc() {
     fi
 
     if [  $success -eq 0 ]; then
-        git_add "${working_dir}/${OUTPUT_FILE}"
+        git_add "${working_dir}/${OUTPUT_FILE:-README.md}"
     fi
 
 }
@@ -96,19 +98,15 @@ cd "${GITHUB_WORKSPACE}"
 
 git_setup
 
-
-if [ -n "${INPUT_CHART}" ]; then
-  for project_dir in ${INPUT_CHART} ; do
-      update_doc "${project_dir}"
-    done
-fi
-  if  [ -n "${INPUT_WORKING_DIR}" ]; then
-    #Split INPUT_WORKING_DIR by commas
-    for project_dir in ${INPUT_WORKING_DIR//,/ }; do
+if  [ -n "${INPUT_WORKING_DIRS:-}" ]; then
+    #Split INPUT_WORKING_DIRS by commas
+    for project_dir in ${INPUT_WORKING_DIRS//,/ }; do
         update_doc "${project_dir}"
     done
-  fi
-
+else
+    echo "ERROR: no-op because INPUT_WORKING_DIRS not specified" >&2
+    exit 1
+fi
 
 # always set num_changed output
 set +e
