@@ -4,8 +4,6 @@ FROM alpine:3
 ARG GITHUB_WORKSPACE=/github/workspace
 ENV GITHUB_WORKSPACE=${GITHUB_WORKSPACE}
 
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-
 RUN set -x \
     && apk update \
     && apk add --no-cache \
