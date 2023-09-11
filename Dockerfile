@@ -1,5 +1,5 @@
 # Use a clean tiny image to store artifacts in
-FROM alpine
+FROM alpine:3
 
 ARG GITHUB_WORKSPACE=/github/workspace
 ENV GITHUB_WORKSPACE=${GITHUB_WORKSPACE}
