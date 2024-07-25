@@ -14,7 +14,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.ref }}
 
@@ -40,13 +40,12 @@ jobs:
 | working-chart | Name of directory to generate docs for  | `.` | false |
 | working-dir | Comma separated list of directories to generate docs for  | `.` | false |
 
-
 #### Auto commit changes
 
 To enable you need to ensure a few things first:
 
 - set `git-push` to `true`
-- use `actions/checkout@v3` with the head ref for PRs or branch name for pushes
+- use `actions/checkout@v4` with the head ref for PRs or branch name for pushes
   - PR
 
     ```yaml
@@ -56,7 +55,7 @@ To enable you need to ensure a few things first:
       docs:
         runs-on: ubuntu-latest
         steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
           with:
             ref: ${{ github.event.pull_request.head.ref }}
     ```
@@ -72,7 +71,7 @@ To enable you need to ensure a few things first:
       docs:
         runs-on: ubuntu-latest
         steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
           with:
             ref: master
     ```
