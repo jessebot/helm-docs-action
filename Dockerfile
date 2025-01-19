@@ -15,8 +15,8 @@ RUN set -x \
         sed \
         yq
 
-RUN wget https://github.com/norwoodj/helm-docs/releases/download/v1.11.0/helm-docs_1.11.0_Linux_x86_64.tar.gz \
-    && tar -xvf helm-docs_1.11.0_Linux_x86_64.tar.gz \
+RUN wget https://github.com/norwoodj/helm-docs/releases/download/v1.14.2/helm-docs_1.14.2_Linux_x86_64.tar.gz \
+    && tar -xvf helm-docs_1.14.2_Linux_x86_64.tar.gz \
     && install ./helm-docs /usr/local/bin/
 
 # Copy all needed files
